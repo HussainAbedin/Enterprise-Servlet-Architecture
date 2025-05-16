@@ -504,3 +504,160 @@ public class FourthServlet extends GenericServlet {
 ```
 ```
 
+Lecture#4 :using HttpServlet Class:
+=================================================================================================================
+
+# **Different Ways of Creating a Servlet**
+
+1. **Servlet (Interface)**
+
+   * Has 5 abstract methods.
+
+2. **GenericServlet (Abstract Class)**
+
+   * One abstract method: `public abstract void service(ServletRequest request, ServletResponse response)`
+   * Easier than implementing `Servlet` directly.
+
+## **Why use HttpServlet if GenericServlet is easier?**
+
+* GenericServlet processes any type of request (GET, POST...) with one `service()` method.
+* Debugging becomes difficult since all requests go through the same method.
+* **HttpServlet** is designed for handling HTTP-specific requests.
+
+## **HttpServlet Methods:**
+
+```java
+public abstract class HttpServlet extends GenericServlet {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp);
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp);
+    protected void service(HttpServletRequest req, HttpServletResponse resp);
+    public void service(ServletRequest req, ServletResponse resp);
+}
+```
+
+**GET Request is sent when:**
+
+* Typing URL in browser.
+* Clicking hyperlink.
+* Using `<form method="GET">` or default form method.
+
+**POST Request is sent when:**
+
+* Using `<form method="POST">`
+
+## **Life Cycle of HttpServlet:**
+
+1. User submits form → browser sends HTTP request.
+2. Web server checks if request is static or dynamic.
+3. If static: returns file or 404.
+4. If dynamic: hands control to **Catalina container**.
+5. Container uses `web.xml` or annotations to map URL (e.g., `/test`).
+6. Checks if `TestServlet` object exists.
+7. If not:
+
+   * Loads class → static block
+   * Instantiates → constructor
+   * Initializes → `init()`
+8. **Request Processing Phase:**
+
+   * Container creates `ServletRequest`, `ServletResponse`
+   * Calls `public void service(ServletRequest, ServletResponse)`
+
+     * If overridden in user class → executed.
+     * Else, calls `HttpServlet`'s version:
+
+```java
+public void service(ServletRequest req, ServletResponse resp) {
+    HttpServletRequest hreq = (HttpServletRequest) req;
+    HttpServletResponse hresp = (HttpServletResponse) resp;
+    service(hreq, hresp); // Calls protected service
+}
+```
+
+* `protected void service(HttpServletRequest req, HttpServletResponse resp)`
+
+  * Checks method type:
+
+    ```java
+    String method = request.getMethod();
+    if(method.equals("GET")) doGet(request, response);
+    else if(method.equals("POST")) doPost(request, response);
+    else return 501;
+    ```
+
+## **Method Calling Hierarchy:**
+
+1. `public void service(ServletRequest, ServletResponse)`
+2. `protected void service(HttpServletRequest, HttpServletResponse)`
+3. `protected/public void doXXX()`
+
+## **Scenarios:**
+
+* Case 1: Only `public service(SR, SR)` → handles all request types.
+* Case 2: `public service(SR, SR)` + `protected service(HSR, HSR)` → `public service()` executed.
+* Case 3: `protected service(HSR, HSR)` + `doGet()` → `protected service()` executed.
+* Case 4: Sending GET but only `doPost()` defined → returns 405.
+* Case 5: Sending POST but only `doGet()` defined → returns 405.
+* Case 6: Common method for both GET and POST:
+
+```java
+@WebServlet("/test")
+public class TestServlet extends HttpServlet {
+    public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        doProcess(req, resp);
+    }
+    public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        doProcess(req, resp);
+    }
+    public void doProcess(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        System.out.println("Method: " + req.getMethod());
+        String userName = req.getParameter("username");
+        System.out.println("Username: " + userName);
+    }
+}
+```
+
+# **Working with Request Object:**
+
+* Retrieve single value:
+
+  * `String getParameter(String name);`
+* Retrieve multiple values:
+
+  * `String[] getParameterValues(String name);`
+* Get request type:
+
+  * `String getMethod();`
+
+## **Example:**
+
+```java
+@WebServlet("/reg")
+public class TestServlet extends HttpServlet {
+    public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("text/html");
+        String username  = req.getParameter("username");
+        String useremail = req.getParameter("useremail");
+        String useraddr  = req.getParameter("useraddr");
+        String[] courses = req.getParameterValues("course");
+
+        PrintWriter out = resp.getWriter();
+        out.println("<html><head><title>OUTPUT</title></head><body><center>");
+        out.println("<h1>Student Registration details</h1>");
+        out.println("<table border='1'>");
+        out.println("<tr><th>NAME</th><td>" + username + "</td></tr>");
+        out.println("<tr><th>EMAIL</th><td>" + useremail + "</td></tr>");
+        out.println("<tr><th>ADDR</th><td>" + useraddr + "</td></tr>");
+        out.println("<tr><th>COURSE</th><td>");
+
+        for(String course : courses) {
+            out.print(course + " ");
+        }
+
+        out.println("</td></tr></table></center></body></html>");
+        out.close();
+    }
+}
+```
+
+
