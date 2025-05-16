@@ -658,8 +658,8 @@ public class TestServlet extends HttpServlet {
         out.close();
     }
 }
-
-![FifthApp image](https://github.com/HussainAbedin/Enterprise-Servlet-Architecture/blob/de496ddf4d092b6c4570f76b81ba996895c7a660/fifth_app_img.png)
 ```
+![FifthApp image](fifth_app_img.png)
+
 
 
