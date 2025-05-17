@@ -662,8 +662,8 @@ public class TestServlet extends HttpServlet {
 ![FifthApp image](fifth_app_img.png)
 
 
-![SixthApp image](E:\ServletGitRepo\images\2.png)
-![SixthApp image](E:\ServletGitRepo\images\3.png)
+![SixthApp image](2.png)
+![SixthApp image](3.png)
 
 
 
