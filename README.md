@@ -913,5 +913,152 @@ e. Configuration via **XML and Annotations**.
 ```
 ![SixthApp image](images/6.png)
 
+Lecture #7: Scope,Parameters and Deployment Explained
+=============================================================================================================================================================================
+
+COMMONLY USED PACKAGES IN SERVLET CODING
+========================================
+import javax.servlet.*;
+import javax.servlet.http.*;
+
+USING THESE INTERFACES, ABSTRACTION IS PROMOTED THROUGH WHICH WODA IS ACHIEVED
+==============================================================================
+- ServletRequest (I)
+- ServletResponse (I)
+- HttpServletRequest (I)
+- HttpServletResponse (I)
+- ServletContext (I)
+- ServletConfig (I)
+
+LIFECYCLE METHODS IN SERVLET
+============================
+void init(ServletConfig config) throws ServletException, IOException
+{
+    // Initialization logic
+}
+
+void doXXXX(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+{
+    // request => QueryString data in the form of key-value pair
+    // response => PrintWriter object to write response
+}
+
+TOMCAT IMPLEMENTATION CLASSES
+=============================
+- ServletConfig       => org.apache.catalina.core.StandardWrapperFacade
+- ServletContext      => org.apache.catalina.core.ApplicationContextFacade
+- HttpServletRequest  => org.apache.catalina.connector.RequestFacade
+- HttpServletResponse => org.apache.catalina.connector.ResponseFacade
+
+SCOPE AND ATTRIBUTE INFORMATION
+===============================
+Scope refers to the accessibility of a variable.
+
+a. Local Scope   => Restricted inside a method  
+b. Global Scope  => Available in all methods of a task  
+
+TYPES OF PARAMETERS (key, value) IN SERVLET
+===========================================
+1. Form Parameters (QueryString)                   => request.getParameter()
+2. Servlet Initialization Parameters               => ServletConfig.getInitParameter()
+3. Context Initialization Parameters               => ServletContext.getInitParameter()
+
+NOTE:
+- These parameters are READ-ONLY.
+- Both key and value are Strings.
+- Not suitable for data sharing across components.
+
+ATTRIBUTE TYPE (For Sharing Data)
+=================================
+- Key should be String
+- Value can be any Object
+
+ATTRIBUTE SCOPES IN SERVLET
+===========================
+1. REQUEST SCOPE
+   - Maintained by: ServletRequest / HttpServletRequest
+   - Starts: At request object creation (before service())
+   - Ends: At request object destruction (after service())
+   - Shared across components processing the same request
+
+2. APPLICATION SCOPE (CONTEXT)
+   - Maintained by: ServletContext
+   - Starts: During context object creation (deployment time)
+   - Ends: During context object destruction (undeployment time)
+   - Shared across all components of the application (across requests and users)
+
+PROGRAM: Display HIT COUNT (ScopeApp)
+=====================================
+- Maintain a counter in application scope.
+- On every request, increment the count and display.
+
+PROGRAM: Display all attribute information in Application Scope
+================================================================
+- Use ServletContext.getAttributeNames()
+- Display key-value pairs
+
+GETTING INFORMATION FROM THE URL
+================================
+1. getRequestURI()    => Full URI of the request
+2. getQueryString()   => Query params after '?'
+3. getServletPath()   => Mapping path of the servlet
+4. getPathInfo()      => Extra path info after servlet path
+5. getContextPath()   => Application root path
+
+CODE EXAMPLE
+============
+package in.ineuron.controller;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@WebServlet("/test/iNeuron/*")
+public class TestServlet extends HttpServlet {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+        
+        PrintWriter out = response.getWriter();
+        out.println("<h1>Request URI   :: " + request.getRequestURI()   + "</h1>");
+        out.println("<h1>Context Path  :: " + request.getContextPath()  + "</h1>");
+        out.println("<h1>Servlet Path  :: " + request.getServletPath()  + "</h1>");
+        out.println("<h1>Path Info     :: " + request.getPathInfo()     + "</h1>");
+        out.println("<h1>Query String  :: " + request.getQueryString()  + "</h1>");
+        out.close();
+    }
+}
+
+REQUEST EXAMPLE
+===============
+http://localhost:9999/RequestAppInfo/test/iNeuron/hyder/java?name=sachin&password=tendulkar
+
+RESPONSE
+========
+Request URI    :: /RequestAppInfo/test/iNeuron/hyder/java  
+Context Path   :: /RequestAppInfo  
+Servlet Path   :: /test/iNeuron  
+Path Info      :: /hyder/java  
+Query String   :: name=sachin&password=tendulkar  
+
+DEPLOYMENT IN TOMCAT
+====================
+1. Hard Deployment
+   - Place app inside `webapps/` folder
+   - Start server manually
+
+2. Smooth Deployment
+   - App exists outside `webapps/`
+   - Deployed using IDE (e.g., Eclipse integration)
+
+NOTE:
+=====
+Eclipse uses smooth deployment by copying project to:
+.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps
+
+
 
 
