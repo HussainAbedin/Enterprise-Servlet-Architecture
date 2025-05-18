@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
+  <servlet>
+    <servlet-name>InitializationParameterApp</servlet-name>
+    <servlet-class>in.hello.controller.InitializationParameterApp</servlet-class>
+    <init-param>
+      <param-name>name</param-name>
+      <param-value>hussain</param-value>
+    </init-param>
+    <init-param>
+      <param-name>age</param-name>
+      <param-value>23</param-value>
+    </init-param>
+    <init-param>
+      <param-name>address</param-name>
+      <param-value>JAVA</param-value>
+    </init-param>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>InitializationParameterApp</servlet-name>
+    <url-pattern>/param</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>InitalizationSecondApp</servlet-name>
+    <servlet-class>in.hello.controller.InitalizationSecondApp</servlet-class>
+    <init-param>
+      <param-name>name</param-name>
+      <param-value>aliasghar</param-value>
+    </init-param>
+    <init-param>
+      <param-name>age</param-name>
+      <param-value>19</param-value>
+    </init-param>
+    <init-param>
+      <param-name>address</param-name>
+      <param-value>Mahad uz Zahra</param-value>
+    </init-param>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>InitalizationSecondApp</servlet-name>
+    <url-pattern>/initsecondapp</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>InitParamXML</servlet-name>
+    <servlet-class>in.hello.controller.InitParamXML</servlet-class>
+    <init-param>
+    <param-name>AUR</param-name>
+    <param-value>Tu hai KAHAN</param-value>
+    </init-param>
+    <init-param>
+    <param-name>YoungStunner</param-name>
+    <param-value>Talha Anjum and younus</param-value>
+    </init-param>
+    <init-param>
+    <param-name>Strings</param-name>
+    <param-value>Sajni</param-value>
+    </init-param>
+    
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>InitParamXML</servlet-name>
+    <url-pattern>/initxml</url-pattern>
+  </servlet-mapping>
+</web-app>
