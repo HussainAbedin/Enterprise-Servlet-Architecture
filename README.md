@@ -784,8 +784,6 @@ Perform insertion into DB using credentials from ServletConfig.
 ```
 
 ![SixthApp image](images/1.png)
-![SixthApp image](images/2.png)
-![SixthApp image](images/3.png)
 
 
 
