@@ -1059,6 +1059,6 @@ NOTE:
 Eclipse uses smooth deployment by copying project to:
 .metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps
 
-
+![SixthApp image](images/7.png)
 
 
