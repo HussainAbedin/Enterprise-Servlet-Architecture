@@ -1016,8 +1016,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-@WebServlet("/test/iNeuron/*")
+```
+@WebServlet("/test/app/*")
 public class TestServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {
@@ -1030,18 +1030,19 @@ public class TestServlet extends HttpServlet {
         out.println("<h1>Query String  :: " + request.getQueryString()  + "</h1>");
         out.close();
     }
-}
 
+}
+```
 REQUEST EXAMPLE
 ===============
-http://localhost:9999/RequestAppInfo/test/iNeuron/hyder/java?name=sachin&password=tendulkar
+http://localhost:9999/RequestAppInfo/test/app/hussain/java?name=babar&password=azam
 
 RESPONSE
 ========
-Request URI    :: /RequestAppInfo/test/iNeuron/hyder/java  
+Request URI    :: /RequestAppInfo/test/app/hussain/java  
 Context Path   :: /RequestAppInfo  
-Servlet Path   :: /test/iNeuron  
-Path Info      :: /hyder/java  
+Servlet Path   :: /test/app  
+Path Info      :: /hussain/java  
 Query String   :: name=sachin&password=tendulkar  
 
 DEPLOYMENT IN TOMCAT
@@ -1058,6 +1059,8 @@ NOTE:
 =====
 Eclipse uses smooth deployment by copying project to:
 .metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps
+
+
 
 ![SixthApp image](images/7.png)
 
