@@ -786,6 +786,132 @@ Perform insertion into DB using credentials from ServletConfig.
 ![SixthApp image](images/1.png)
 ![SixthApp image](images/4.png)
 
+Lecture #6: Servlet Config and Servlet Context
+===================================================================================================================================================================
+```
+1. Why there is no main method in Servlets?
+===========================================
+
+Answer:
+JVM is designed to start execution from:
+    public static void main(String[] args)
+
+→ If it's a **standalone application**, JVM starts the execution.
+→ But in **web applications**, the **container** handles the lifecycle:
+
+    a. Loading
+    b. Instantiation
+    c. Initialization
+    d. Request Processing
+    e. De-Instantiation
+
+→ Since JVM does not control servlet execution directly, we don’t need a main method in Servlets.
+3. ServletConfig InitParameters
+===============================
+
+Configuration Approaches:
+-------------------------
+1. XML
+2. Annotations
+
+Annotation example:
+-------------------
+@WebServlet(urlPatterns = {}, loadOnStartup = 10,
+    initParams = {
+        @WebInitParam(name = "url", value = "jdbc:mysql:///octbatch"),
+        @WebInitParam(name = "user", value = "root"),
+        @WebInitParam(name = "password", value = "root123")
+    })
+
+Note:
+- Initialization parameters are key-value pairs (both are String).
+- Can only be read via getXXX(); they cannot be modified.
+- They are called **"Deploy time constants"**.
+- Each servlet gets one ServletConfig object.
+
+ServletContext(I)
+==================
+
+→ For each web application, the container creates **only one ServletContext object**.
+
+→ Used to store **application-wide configuration data**.
+
+Q: Can we store common configuration in ServletConfig?
+A: Technically yes, but not recommended. Use ServletContext for common data.
+
+→ ServletContext can only be configured via **XML**, not annotations.
+
+web.xml:
+--------
+<web-app>
+  <context-param>
+    <param-name>jdbcUrl</param-name>
+    <param-value>jdbc:mysql:///octbatch</param-value>
+  </context-param>
+  <context-param>
+    <param-name>user</param-name>
+    <param-value>root</param-value>
+  </context-param>
+  <context-param>
+    <param-name>password</param-name>
+    <param-value>root123</param-value>
+  </context-param>
+
+  <servlet>
+    ...
+  </servlet>
+</web-app>
+
+Ways to access ServletContext in code:
+--------------------------------------
+a. ServletConfig config = getServletConfig();
+   ServletContext context = config.getServletContext();
+
+b. ServletContext context = getServletContext();
+
+Methods:
+--------
+- public String getInitParameter(String name)
+- public Enumeration getInitParameterNames()
+
+load-on-startup behavior:
+-------------------------
+- Lower value → servlet loads first.
+- Same value → container decides.
+- Negative value → servlet not loaded at startup.
+
+Difference: ServletContext vs ServletConfig
+============================================
+
+ServletContext:
+---------------
+a. One object per web application (application-wide).
+b. Created at deployment, destroyed at undeployment.
+c. Configuration via: 
+   <context-param>
+     <param-name>...</param-name>
+     <param-value>...</param-value>
+   </context-param>
+d. Ways to access:
+   ServletContext context = getServletContext();
+   ServletConfig config = getServletConfig();
+   ServletContext context = config.getServletContext();
+e. Configuration only via **XML**.
+
+ServletConfig:
+--------------
+a. One object per servlet.
+b. Created when servlet is instantiated, destroyed when servlet is destroyed.
+c. Configuration via:
+   <init-param>
+     <param-name>...</param-name>
+     <param-value>...</param-value>
+   </init-param>
+d. Access via:
+   ServletConfig config = getServletConfig();
+e. Configuration via **XML and Annotations**.
+```
+
 
 
 
