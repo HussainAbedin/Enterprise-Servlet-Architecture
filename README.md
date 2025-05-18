@@ -911,7 +911,7 @@ d. Access via:
    ServletConfig config = getServletConfig();
 e. Configuration via **XML and Annotations**.
 ```
-
+![SixthApp image](images/6.png)
 
 
 
