@@ -783,6 +783,7 @@ Create a HTML form with:
 Perform insertion into DB using credentials from ServletConfig.
 ```
 
+![SixthApp image](images/1.png)
 
 
 
