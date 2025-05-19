@@ -1065,3 +1065,123 @@ Eclipse uses smooth deployment by copying project to:
 ![SixthApp image](images/7.png)
 
 
+Lecture #8 : Session Tracking Mechanisms in Servlets
+=========================================================================================================================================================================
+
+# **Session Tracking Mechanism**
+
+As a part of a web application, it is essential to manage the client's previous request data at the time of processing a later request.
+
+**Solution 1: Usage of Request Object**
+
+* Request object gets created when a request is sent to the application.
+* It gets destroyed when the response is sent.
+* Hence, it cannot retain previous client data.
+
+**Solution 2: Usage of Context Object**
+
+* Context object shares data across all components and all users.
+* Cannot differentiate data per user.
+* Not a good approach.
+
+To manage individual client data across requests, we use **Session Tracking**, a server-side mechanism.
+
+---
+
+# **Session**
+
+* Refers to the amount of time a client spends with the server.
+
+**State of the Session**
+
+* Data transferred between client and server through multiple requests during a session.
+
+At application startup:
+
+* `ServletContext` object is created.
+* On request: `HttpServletRequest` object is created.
+* To manage session: `HttpSession` object must be created per user.
+
+---
+
+# **Types of Session Tracking Mechanism**
+
+1. HttpSession Tracking
+2. Cookie Session Tracking
+3. URL Rewriting
+4. Hidden Form Field (Developer Specified)
+
+*Note:* As per Sun's Servlet API specification, only the first 3 are official mechanisms.
+
+---
+
+# **HttpSession Tracking**
+
+**Q: Difference between `getSession()` and `getSession(false)`?**
+
+* `getSession()` →
+
+  * Checks if a session exists for the user.
+  * Returns existing session or creates a new one.
+* `getSession(false)` →
+
+  * Checks if a session exists.
+  * Returns existing session or `null` (does not create a new one).
+
+*Note: `getSession()` = `getSession(true)`*
+
+**Q: How does the container identify user-specific HttpSession objects?**
+
+* Container creates a unique session ID in Hex format (`JSessionID`).
+* The ID is sent to the client via cookies.
+* On next request, the browser sends back this ID to identify the session.
+
+**Destroy Session Manually:**
+
+```java
+session.invalidate();
+```
+
+# **Limitations of HttpSession Tracking**
+
+1. Creating server-side sessions is costly and impacts performance.
+2. If cookies are disabled on the client, session tracking fails.
+
+→ Solution: Use **Cookie Session Tracking**.
+
+---
+
+# **Cookie Session Tracking**
+
+* Create a cookie for each user's request data.
+* Send cookie with response object.
+* Cookie is exchanged between client and server in requests/responses.
+
+**Key Methods:**
+
+* Create Cookie:
+
+```java
+Cookie c = new Cookie("key", "value");
+```
+
+* Retrieve Cookies:
+
+```java
+Cookie[] cookies = request.getCookies();
+```
+
+* Add Cookie to Response:
+
+```java
+response.addCookie(c);
+```
+
+**Drawbacks:**
+
+1. If browser disables cookies, this mechanism fails.
+2. Cookies are client-side, and vulnerable to tampering/misuse → security risk.
+
+→ Solution: Use **URL Rewriting** Mechanism (next topic).
+
+
