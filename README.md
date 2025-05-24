@@ -1185,3 +1185,163 @@ response.addCookie(c);
 → Solution: Use **URL Rewriting** Mechanism (next topic).
 
 
+Lecture #9 :Session Tracking, URL Patterns, and Welcome Page Configuration
+======================================================================================================================================================================
+
+**Servlet API Notes**
+
+---
+
+### Session Tracking Mechanisms
+
+#### 1. HttpSession Tracking
+
+* Session ID is stored in the form of a cookie.
+* If cookies are disabled in the client browser, HttpSession tracking will not work.
+* Session objects are maintained at the server-side, which increases the server load.
+* Example: `JSESSIONID=...DBEFH`
+
+#### 2. Cookie Session Tracking
+
+* Cookies are stored on the client-side.
+* If cookies are disabled, we cannot track client data.
+* Security risk: Since data is stored on the client, it may lead to a security breach.
+
+#### 3. URL Rewriting
+
+* Works similarly to HttpSession but instead of storing the session ID in a cookie, it is appended to the URL.
+* Session ID is passed with each request-response.
+* Example:
+
+  ```html
+  <form method="get" action='"+response.encodeURL("./second")+"'>
+  </form>
+  ```
+
+  Result: `./second?JSESSIONID=...`
+* **Note**: Frameworks usually support session tracking through URL rewriting.
+![SixthApp image](images/8.png)
+
+![SixthApp image](images/9.png)
+
+![SixthApp image](images/10.png)
+
+#### 4. Hidden Form Field (Developer-invented)
+
+* Not used in real-time as it increases lines of code.
+
+---
+
+![SixthApp image](images/11.png)
+
+![SixthApp image](images/12.png)
+
+![SixthApp image](images/12.png)
+
+
+### URL Pattern Types (Servlet Mapping)
+
+As per Servlet specification, four types:
+
+1. **Exact Match URL Pattern**
+
+   * Example: `/test`
+
+2. **Longest Path Prefix URL Pattern**
+
+   * Example: `/controller/servlet/*`
+
+3. **URL Pattern by Extension**
+
+   * Example: `*.do`
+
+4. **Default URL Pattern**
+
+   * Example: `/`
+
+#### Valid and Invalid Patterns:
+
+| Pattern          | Validity |
+| ---------------- | -------- |
+| /test            | Valid    |
+| /test/\*/test    | Invalid  |
+| /test/test/\*    | Valid    |
+| \*.test          | Valid    |
+| /                | Valid    |
+| /test/test/\*.do | Valid    |
+
+---
+
+### Servlet Mappings (Examples)
+
+| Pattern       | Servlet Mapped |
+| ------------- | -------------- |
+| /             | FourthServlet  |
+| /test         | FirstServlet   |
+| /test/test/\* | SecondServlet  |
+| \*.do         | ThirdServlet   |
+
+#### Example URLs and Mapping:
+
+* `http://localhost:9999/URLPatternTypesApp/test/test/navindReddy.do` → SecondServlet
+* `http://localhost:9999/URLPatternTypesApp/test/test/navinReddy` → SecondServlet
+* `http://localhost:9999/URLPatternTypesApp/` → DefaultServlet
+* `http://localhost:9999/URLPatternTypesApp/navinReddy.do` → ThirdServlet
+* `http://localhost:9999/URLPatternTypesApp/test/hyder` → DefaultServlet
+
+**Servlet Matching Priority (by Web Container):**
+
+1. Exact Match
+2. Longest Path Prefix
+3. Extension Match
+4. Default Match
+
+**Real-Time Use:**
+
+* **Extension-based pattern (`*.do`) is preferred.**
+* Spring MVC’s `DispatcherServlet` (Front Controller) is usually configured using URL pattern by extension.
+
+---
+
+### Welcome Page Configuration
+
+* It's **recommended** to configure a welcome or landing page.
+
+**Benefits:**
+
+* Improves user experience.
+
+**Can be configured in XML for only HTML and JSP files.**
+
+Example configuration:
+
+```xml
+<web-app>
+  <welcome-file-list>
+    <welcome-file>home.jsp</welcome-file>
+    <welcome-file>welcome.jsp</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+</web-app>
+```
+
+**Notes:**
+
+* Order of files is top to bottom for resolution.
+* If `index.html` is not found, it checks for `index.jsp`.
+* Do **not** prefix filenames with `/` in `<welcome-file>`:
+
+  * ✅ `<welcome-file>index.jsp</welcome-file>`
+  * ❌ `<welcome-file>/index.jsp</welcome-file>`
+
+Example:
+
+```
+http://localhost:9999/FirstApp/ → Loads index.html or index.jsp if found.
+```
+
+
+
+![SixthApp image](images/14.png)
+
+![SixthApp image](images/15.png)
