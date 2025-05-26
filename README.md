@@ -1345,3 +1345,145 @@ http://localhost:9999/FirstApp/ → Loads index.html or index.jsp if found.
 ![SixthApp image](images/14.png)
 
 ![SixthApp image](images/15.png)
+
+
+
+Lecture #10 : Filters and Interceptors in Servlet API
+=========================================================================================================================================================================
+
+**Title: Filters and Interceptors in Servlet API**
+
+---
+
+### Overview
+
+Filters/Interceptors are components in a web application used for **PreProcessing and PostProcessing** of requests and responses. They can intercept requests before they reach a Servlet and responses before they are sent back to the client.
+
+---
+
+### Areas of Application
+
+* Logging
+* Security
+* Altering request information
+* Compressing response
+* Encrypting response
+* Authentication
+
+---
+
+### Filter API (Introduced in Servlet 2.3)
+
+**Main Interfaces:**
+
+1. `Filter`
+2. `FilterConfig`
+3. `FilterChain`
+
+To create a custom filter, implement the `Filter` interface:
+
+```java
+public interface Filter {
+    public void init(FilterConfig config) throws ServletException;
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+            throws IOException, ServletException;
+    public void destroy();
+}
+```
+
+---
+
+### Behind the Scenes
+
+1. When a request is made to a Servlet, the WebContainer checks if any filter is configured.
+2. If a filter exists, the request is passed to the filter first.
+3. After filter logic is applied, the request goes to the target Servlet.
+4. The Servlet processes the request and sends the response back to the filter.
+5. The filter may perform post-processing before sending the final response to the browser.
+
+**Example Output Flow:**
+
+```
+This line is added by DemoFilter before processing the request...
+This is Target Servlet...
+This line is added by DemoFilter after processing the request...
+```
+
+---
+
+### Filter Mapping
+
+#### Mapping to a Specific URL Pattern
+
+```xml
+<filter-mapping>
+    <filter-name>DemoFilter</filter-name>
+    <url-pattern>/test</url-pattern>
+</filter-mapping>
+```
+
+#### Mapping to Entire Web Application
+
+```xml
+<filter-mapping>
+    <filter-name>DemoFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+</filter-mapping>
+```
+
+---
+
+![SixthApp image](images/16.png)
+
+
+### Filter Chaining
+
+Used to divide request processing across multiple filters.
+
+**Note:**
+
+* Order of execution in FilterChain is container-dependent and not predictable by the user.
+
+---
+
+### Difference: Filter doFilter() vs. FilterChain doFilter()
+
+| Method                   | Description                                                                       |
+| ------------------------ | --------------------------------------------------------------------------------- |
+| `Filter.doFilter()`      | Callback method called by the container. Executes filtering logic (pre and post). |
+| `FilterChain.doFilter()` | Manually called to forward the request to next filter or servlet. Not a callback. |
+
+---
+![SixthApp image](images/17.png)
+
+
+### Wrappers and Listeners
+
+Used to alter `request` and `response` objects inside filters.
+
+#### Examples:
+
+* Convert a resume from Word to PDF during upload.
+* Compress a response before sending it to the client.
+
+#### Types of Wrappers:
+
+* Request Wrappers
+* Response Wrappers
+
+**Notes:**
+
+* No configuration is needed for wrappers.
+* Annotation for filters:
+
+```java
+@WebFilter(urlPatterns={"/yourPattern"})
+```
+
+---
+
+![SixthApp image](images/18.png)
+
+
+**End of Notes**
+
