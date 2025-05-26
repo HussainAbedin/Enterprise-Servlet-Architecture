@@ -1485,5 +1485,5 @@ Used to alter `request` and `response` objects inside filters.
 ![SixthApp image](images/18.png)
 
 
-**End of Notes**
+
 
